@@ -3,4 +3,10 @@
     <string name="title_home">Today</string>
     <string name="title_dashboard">Daily</string>
     <string name="title_notifications">Settings</string>
+
+    <string name="city_hint">City</string>
+    <string name="search_button_text">GO</string>
+    <string name="favorite_icon">Favourites</string>
+    <string name="location_icon">Location</string>
+    <string name="climate_image">Climate</string>
 </resources>

@@ -1,22 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.home.HomeFragment"
+    android:background="@drawable/weather_background">
+
+    <LinearLayout
+        android:id="@+id/llSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        android:background="@color/grey"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/citySearch"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/city_hint"
+            android:inputType="text"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/favouriteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@string/favorite_icon"
+            android:src="@drawable/ic_baseline_star_outline_24"
+            tools:ignore="ImageContrastCheck" />
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:text="@string/search_button_text"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/mapIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_add_location_24"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="5dp"
+            android:contentDescription="@string/location_icon" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
+        android:id="@+id/dateTime"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/llSearch"
+        tools:text="27 October, 11.41 am"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:textSize="16sp"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/dayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/dateTime"
+        app:layout_constraintTop_toBottomOf="@id/dateTime"
+        tools:text="27 October, 11.41 am"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/dateTime"
+        app:layout_constraintTop_toBottomOf="@id/dayNight"
+        tools:text="27"
+        android:layout_marginTop="10dp"
+        android:textSize="100sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/feelsLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/dateTime"
+        app:layout_constraintTop_toBottomOf="@id/temperature"
+        tools:text="Feels Like"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"/>
+
+    <ImageView
+        android:id="@+id/climateImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/temperature"
+        app:layout_constraintBottom_toBottomOf="@id/temperature"
+        android:src="@drawable/sun"
+        android:contentDescription="@string/climate_image"
+        android:layout_marginEnd="20dp"/>
+
+    <TextView
+        android:id="@+id/climateType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/feelsLike"
+        app:layout_constraintStart_toStartOf="@id/climateImage"
+        tools:text="Haze"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_marginEnd="20dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/drawable/ic_baseline_add_location_24.xml" value="0.2703125" />
         <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/layout/fragment_dashboard.xml" value="0.25416666666666665" />
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/layout/fragment_notifications.xml" value="0.25416666666666665" />
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
