@@ -3,8 +3,8 @@ package com.example.weatherappretrofit.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.weatherappretrofit.model.WeatherModel
-import com.example.weatherappretrofit.retrofit.Repository
+import com.example.weatherappretrofit.currentweather.model.WeatherModel
+import com.example.weatherappretrofit.repository.Repository
 import java.text.SimpleDateFormat
 import java.util.*
 

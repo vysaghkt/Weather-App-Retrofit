@@ -69,7 +69,7 @@
         android:textColor="@color/white"/>
 
     <TextView
-        android:id="@+id/dayNight"
+        android:id="@+id/minMax"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/dateTime"
@@ -84,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/dateTime"
-        app:layout_constraintTop_toBottomOf="@id/dayNight"
+        app:layout_constraintTop_toBottomOf="@id/minMax"
         tools:text="27"
         android:layout_marginTop="10dp"
         android:textSize="100sp"

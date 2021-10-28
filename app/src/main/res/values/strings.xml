@@ -4,9 +4,16 @@
     <string name="title_dashboard">Daily</string>
     <string name="title_notifications">Settings</string>
 
+    <!-- Home Fragment Layout -->
     <string name="city_hint">City</string>
     <string name="search_button_text">GO</string>
     <string name="favorite_icon">Favourites</string>
     <string name="location_icon">Location</string>
     <string name="climate_image">Climate</string>
+
+    <!--Home Fragment-->
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="feels_like">Feels Like</string>
+    <string name="celsius">\u2103</string>
 </resources>

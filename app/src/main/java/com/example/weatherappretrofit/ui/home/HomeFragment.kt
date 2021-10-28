@@ -1,7 +1,6 @@
 package com.example.weatherappretrofit.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +11,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.weatherappretrofit.R
 import com.example.weatherappretrofit.databinding.FragmentHomeBinding
-import com.example.weatherappretrofit.retrofit.Repository
+import com.example.weatherappretrofit.repository.Repository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class HomeFragment : Fragment() {
 
@@ -26,6 +27,10 @@ class HomeFragment : Fragment() {
     private lateinit var dateTextView: TextView
     private lateinit var searchButton: Button
     private lateinit var citySearch: EditText
+    private lateinit var minMaxTv: TextView
+    private lateinit var temperatureTv: TextView
+    private lateinit var feelsLikeTv: TextView
+    private lateinit var climateType: TextView
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -35,7 +40,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -43,6 +48,10 @@ class HomeFragment : Fragment() {
         dateTextView = binding.dateTime
         searchButton = binding.searchButton
         citySearch = binding.citySearch
+        minMaxTv = binding.minMax
+        temperatureTv = binding.temperature
+        feelsLikeTv = binding.feelsLike
+        climateType = binding.climateType
 
         val repository = Repository()
         val viewModelFactory = HomeViewModelFactory(repository)
@@ -70,7 +79,11 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.weatherData.observe(viewLifecycleOwner, Observer {
-            Log.e("KOTLIN",it.name.toString())
+            minMaxTv.text = (getString(R.string.min) + " " + it.main?.tempMin?.roundToInt().toString() + getString(R.string.celsius)
+                    + "  " + getString(R.string.max) + " " + it.main?.tempMax?.roundToInt().toString() + getString(R.string.celsius))
+            temperatureTv.text = (it.main?.temp?.roundToInt().toString() + getString(R.string.celsius))
+            feelsLikeTv.text = (getString(R.string.feels_like) + "  " + it.main?.feelsLike?.roundToInt().toString() + getString(R.string.celsius))
+            climateType.text = it.weather?.get(0)?.main
         })
     }
 

@@ -1,6 +1,6 @@
-package com.example.weatherappretrofit.retrofit
+package com.example.weatherappretrofit.currentweather.retrofit
 
-import com.example.weatherappretrofit.model.WeatherModel
+import com.example.weatherappretrofit.currentweather.model.WeatherModel
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,5 +11,5 @@ interface WeatherApi {
         @Query("q") q: String,
         @Query("units") units: String,
         @Query("appid") appid: String
-    ):WeatherModel
+    ): WeatherModel
 }
