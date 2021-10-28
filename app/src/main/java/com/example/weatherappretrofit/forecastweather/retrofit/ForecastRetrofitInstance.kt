@@ -1,19 +1,19 @@
-package com.example.weatherappretrofit.currentweather.retrofit
+package com.example.weatherappretrofit.forecastweather.retrofit
 
 import com.example.weatherappretrofit.constants.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitInstance {
+object ForecastRetrofitInstance {
 
-    private val retrofit by lazy {
+    private val forecastRetrofit by lazy {
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    val api: WeatherApi by lazy {
-        retrofit.create(WeatherApi::class.java)
+    val forecastApi: ForecastWeatherApi by lazy {
+        forecastRetrofit.create(ForecastWeatherApi::class.java)
     }
 }

@@ -12,8 +12,8 @@
     <string name="climate_image">Climate</string>
 
     <!--Home Fragment-->
-    <string name="min">Min</string>
-    <string name="max">Max</string>
+    <string name="day">Day</string>
+    <string name="night">Night</string>
     <string name="feels_like">Feels Like</string>
     <string name="celsius">\u2103</string>
 </resources>
