@@ -25,6 +25,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.squareup.picasso.Picasso
 import java.lang.Exception
 import kotlin.math.roundToInt
 
@@ -116,6 +117,11 @@ class HomeFragment : Fragment() {
                     R.string.celsius
                 ))
             climateType.text = it.current?.weather?.get(0)?.main
+            val icon = it.current?.weather?.get(0)?.icon
+            Picasso.get()
+                .load("http://openweathermap.org/img/wn/03d@4x.png")
+                .placeholder(R.drawable.ic_baseline_image_24)
+                .into(binding.climateImage)
         })
     }
 
@@ -128,7 +134,7 @@ class HomeFragment : Fragment() {
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                     if (report!!.areAllPermissionsGranted()) {
-                        Toast.makeText(activity, "Permission Granted", Toast.LENGTH_SHORT).show()
+                        getForecastWeather(0.0, 0.0)
                     } else if (report.isAnyPermissionPermanentlyDenied) {
                         showRationalDialogForPermission()
                     }
