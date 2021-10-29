@@ -12,7 +12,9 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeViewModel(private val repository: Repository) : ViewModel() {
+class HomeViewModel() : ViewModel() {
+
+    val repository = Repository()
 
     private val _dateTime = MutableLiveData<String>().apply {
         val sdf = SimpleDateFormat("d MMMM, hh:mm a", Locale.getDefault())

@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherappretrofit.R
@@ -31,7 +32,7 @@ import kotlin.math.roundToInt
 
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by activityViewModels()
     private var _binding: FragmentHomeBinding? = null
 
     private lateinit var dateTextView: TextView
@@ -62,11 +63,6 @@ class HomeFragment : Fragment() {
         temperatureTv = binding.temperature
         feelsLikeTv = binding.feelsLike
         climateType = binding.climateType
-
-        val repository = Repository()
-        val viewModelFactory = HomeViewModelFactory(repository)
-        homeViewModel =
-            ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
             dateTextView.text = it
@@ -119,7 +115,7 @@ class HomeFragment : Fragment() {
             climateType.text = it.current?.weather?.get(0)?.main
             val icon = it.current?.weather?.get(0)?.icon
             Picasso.get()
-                .load("http://openweathermap.org/img/wn/03d@4x.png")
+                .load("http://openweathermap.org/img/wn/$icon@4x.png")
                 .placeholder(R.drawable.ic_baseline_image_24)
                 .into(binding.climateImage)
         })
