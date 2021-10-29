@@ -1,6 +1,12 @@
 package com.example.weatherappretrofit.ui.home
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +20,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weatherappretrofit.R
 import com.example.weatherappretrofit.databinding.FragmentHomeBinding
 import com.example.weatherappretrofit.repository.Repository
-import kotlinx.coroutines.*
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import java.lang.Exception
 import kotlin.math.roundToInt
 
 class HomeFragment : Fragment() {
@@ -60,6 +71,8 @@ class HomeFragment : Fragment() {
             dateTextView.text = it
         })
 
+        hasLocationPermission()
+
         searchButton.setOnClickListener {
             if (citySearch.text.isEmpty()) {
                 Toast.makeText(activity, "Please Enter a City Name", Toast.LENGTH_LONG).show()
@@ -73,9 +86,7 @@ class HomeFragment : Fragment() {
 
     private fun setWeatherDataUI() {
 
-        CoroutineScope(Dispatchers.Main).async {
-            homeViewModel.getWeatherData(citySearch.text.toString())
-        }
+        homeViewModel.getWeatherData(citySearch.text.toString())
 
         homeViewModel.weatherData.observe(viewLifecycleOwner, Observer {
             val lat = it.coord?.lat
@@ -85,10 +96,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun getForecastWeather(latitude: Double?, longitude: Double?) {
-        CoroutineScope(Dispatchers.Main).async {
-            if (latitude != null && longitude != null) {
-                homeViewModel.getForecastData(latitude, longitude)
-            }
+
+        if (latitude != null && longitude != null) {
+            homeViewModel.getForecastData(latitude, longitude)
         }
 
         homeViewModel.forecastData.observe(viewLifecycleOwner, Observer {
@@ -107,6 +117,49 @@ class HomeFragment : Fragment() {
                 ))
             climateType.text = it.current?.weather?.get(0)?.main
         })
+    }
+
+    private fun hasLocationPermission() {
+        Dexter.withActivity(activity)
+            .withPermissions(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    if (report!!.areAllPermissionsGranted()) {
+                        Toast.makeText(activity, "Permission Granted", Toast.LENGTH_SHORT).show()
+                    } else if (report.isAnyPermissionPermanentlyDenied) {
+                        showRationalDialogForPermission()
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    showRationalDialogForPermission()
+                }
+
+            }).onSameThread().check()
+    }
+
+    private fun showRationalDialogForPermission() {
+        AlertDialog.Builder(activity)
+            .setMessage("Location Permission is denied. Please allow it to continue")
+            .setPositiveButton("Go To Settings") { _, _ ->
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", context?.packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Log.e("ACTIVITY", e.toString())
+                }
+            }
+            .setNegativeButton("Exit") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 
     override fun onDestroyView() {

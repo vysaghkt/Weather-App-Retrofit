@@ -3,9 +3,12 @@ package com.example.weatherappretrofit.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.weatherappretrofit.currentweather.model.WeatherModel
-import com.example.weatherappretrofit.forecastweather.ForecastWeatherModel
+import com.example.weatherappretrofit.forecastweather.model.ForecastWeatherModel
 import com.example.weatherappretrofit.repository.Repository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,15 +23,19 @@ class HomeViewModel(private val repository: Repository) : ViewModel() {
 
     val weatherData = MutableLiveData<WeatherModel>()
 
-    suspend fun getWeatherData(city: String){
-        val data = repository.getWeatherData(city)
-        weatherData.value = data
+    fun getWeatherData(city: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val data = repository.getWeatherData(city)
+            weatherData.value = data
+        }
     }
 
     val forecastData = MutableLiveData<ForecastWeatherModel>()
 
-    suspend fun getForecastData(lat: Double, lon: Double){
-        val data = repository.getForecastData(lat,lon)
-        forecastData.value = data
+    fun getForecastData(lat: Double, lon: Double) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val data = repository.getForecastData(lat, lon)
+            forecastData.value = data
+        }
     }
 }

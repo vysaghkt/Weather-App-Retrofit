@@ -1,6 +1,6 @@
 package com.example.weatherappretrofit.forecastweather.retrofit
 
-import com.example.weatherappretrofit.forecastweather.ForecastWeatherModel
+import com.example.weatherappretrofit.forecastweather.model.ForecastWeatherModel
 import retrofit2.http.GET
 import retrofit2.http.Query
 
