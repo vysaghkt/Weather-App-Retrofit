@@ -14,7 +14,7 @@ import java.util.*
 
 class HomeViewModel() : ViewModel() {
 
-    val repository = Repository()
+    private val repository = Repository()
 
     private val _dateTime = MutableLiveData<String>().apply {
         val sdf = SimpleDateFormat("d MMMM, hh:mm a", Locale.getDefault())

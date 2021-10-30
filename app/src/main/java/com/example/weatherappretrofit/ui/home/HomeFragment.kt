@@ -17,10 +17,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.weatherappretrofit.R
 import com.example.weatherappretrofit.databinding.FragmentHomeBinding
-import com.example.weatherappretrofit.repository.Repository
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken

@@ -5,19 +5,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.weatherappretrofit.R
 import com.example.weatherappretrofit.databinding.FragmentDashboardBinding
 import com.example.weatherappretrofit.ui.home.HomeViewModel
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 class DashboardFragment : Fragment() {
 
     private val dashboardViewModel: HomeViewModel by activityViewModels()
     private var _binding: FragmentDashboardBinding? = null
+
+    private val forecastList: ArrayList<DailyModel> = arrayListOf()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -27,15 +31,39 @@ class DashboardFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         dashboardViewModel.forecastData.observe(viewLifecycleOwner, Observer {
-            Log.d("FORECAST", it.timezoneOffset.toString())
+            val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
+            for (i in 0..7) {
+                val dt = it.daily?.get(i)?.dt?.toLong()
+                var date = sdf.format(Date(dt?.times(1000)!!))
+                if (i == 0) {
+                    date = getString(R.string.title_home)
+                }
+                val tempDay =
+                    (it.daily[i]?.temp?.day?.roundToInt().toString() + getString(R.string.celsius))
+                val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
+                    .toString() + getString(R.string.celsius))
+                forecastList.add(
+                    DailyModel(
+                        date,
+                        tempDay,
+                        tempNight
+                    )
+                )
+            }
+            Log.d("FORECAST_LIST", forecastList.toString())
+            binding.recyclerView.adapter = context?.let { it1 ->
+                ForecastAdapter(
+                    forecastList,
+                    it1
+                )
+            }
         })
-
 
         return root
     }
