@@ -48,6 +48,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+
     //Retrofit and Converter
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -61,4 +63,8 @@ dependencies {
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //DataStore
+    implementation 'androidx.datastore:datastore-preferences:1.0.0-rc01'
+    implementation 'androidx.datastore:datastore-preferences-core:1.0.0-rc01'
 }
