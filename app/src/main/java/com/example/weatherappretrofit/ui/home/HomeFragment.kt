@@ -1,6 +1,7 @@
 package com.example.weatherappretrofit.ui.home
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -14,12 +15,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.example.weatherappretrofit.R
 import com.example.weatherappretrofit.databinding.FragmentHomeBinding
 import com.example.weatherappretrofit.ui.notifications.NotificationsViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -44,6 +48,8 @@ class HomeFragment : Fragment() {
     private lateinit var feelsLikeTv: TextView
     private lateinit var climateType: TextView
 
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -65,6 +71,8 @@ class HomeFragment : Fragment() {
         feelsLikeTv = binding.feelsLike
         climateType = binding.climateType
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
             dateTextView.text = it
         })
@@ -79,12 +87,17 @@ class HomeFragment : Fragment() {
             }
         }
 
+        binding.mapIcon.setOnClickListener {
+            getPresentLocation()
+        }
+
         return root
     }
 
     private fun setWeatherDataUI() {
 
         homeViewModel.getWeatherData(citySearch.text.toString())
+        citySearch.setText("")
 
         homeViewModel.weatherData.observe(viewLifecycleOwner, Observer {
             val lat = it.coord?.lat
@@ -156,8 +169,8 @@ class HomeFragment : Fragment() {
             )
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                    if (report!!.areAllPermissionsGranted()) {
-                        getForecastWeather(0.0, 0.0)
+                    if (report!!.areAllPermissionsGranted()){
+                        getPresentLocation()
                     } else if (report.isAnyPermissionPermanentlyDenied) {
                         showRationalDialogForPermission()
                     }
@@ -171,6 +184,13 @@ class HomeFragment : Fragment() {
                 }
 
             }).onSameThread().check()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getPresentLocation(){
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+            getForecastWeather(it.latitude, it.longitude)
+        }
     }
 
     private fun showRationalDialogForPermission() {
