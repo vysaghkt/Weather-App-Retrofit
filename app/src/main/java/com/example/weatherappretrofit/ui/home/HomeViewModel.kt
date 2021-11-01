@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeViewModel() : ViewModel() {
+class HomeViewModel : ViewModel() {
 
     private val repository = Repository()
 
@@ -34,9 +34,9 @@ class HomeViewModel() : ViewModel() {
 
     val forecastData = MutableLiveData<ForecastWeatherModel>()
 
-    fun getForecastData(lat: Double, lon: Double) {
+    fun getForecastData(lat: Double, lon: Double, unit: String) {
         viewModelScope.launch(Dispatchers.Main) {
-            val data = repository.getForecastData(lat, lon)
+            val data = repository.getForecastData(lat, lon, unit)
             forecastData.value = data
         }
     }

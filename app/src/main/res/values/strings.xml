@@ -16,6 +16,7 @@
     <string name="night">Night</string>
     <string name="feels_like">Feels Like</string>
     <string name="celsius">\u2103</string>
+    <string name="fahrenheit">\u2109</string>
 
     <string name="units">Units</string>
 </resources>

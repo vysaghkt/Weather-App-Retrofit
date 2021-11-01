@@ -12,11 +12,11 @@ class Repository {
         return RetrofitInstance.api.getWeatherData(city, Constants.UNITS, Constants.API_ID)
     }
 
-    suspend fun getForecastData(lat: Double, lon: Double): ForecastWeatherModel {
+    suspend fun getForecastData(lat: Double, lon: Double, unit: String): ForecastWeatherModel {
         return ForecastRetrofitInstance.forecastApi.getForecastData(
             lat,
             lon,
-            Constants.UNITS,
+            unit,
             Constants.API_ID,
             Constants.EXCLUDE
         )

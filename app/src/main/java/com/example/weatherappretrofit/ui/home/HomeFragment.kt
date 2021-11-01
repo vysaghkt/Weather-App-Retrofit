@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.example.weatherappretrofit.R
 import com.example.weatherappretrofit.databinding.FragmentHomeBinding
+import com.example.weatherappretrofit.ui.notifications.NotificationsViewModel
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -31,6 +32,8 @@ import kotlin.math.roundToInt
 class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val notificationViewModel: NotificationsViewModel by activityViewModels()
+
     private var _binding: FragmentHomeBinding? = null
 
     private lateinit var dateTextView: TextView
@@ -92,31 +95,57 @@ class HomeFragment : Fragment() {
 
     private fun getForecastWeather(latitude: Double?, longitude: Double?) {
 
-        if (latitude != null && longitude != null) {
-            homeViewModel.getForecastData(latitude, longitude)
-        }
-
-        homeViewModel.forecastData.observe(viewLifecycleOwner, Observer {
-            minMaxTv.text =
-                (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
-                    R.string.celsius
-                )
-                        + "  " + getString(R.string.night) + " " + it.daily?.get(0)?.temp?.night?.roundToInt() + getString(
-                    R.string.celsius
-                ))
-            temperatureTv.text =
-                (it.current?.temp?.roundToInt().toString() + getString(R.string.celsius))
-            feelsLikeTv.text =
-                (getString(R.string.feels_like) + " " + it.current?.feelsLike?.roundToInt() + getString(
-                    R.string.celsius
-                ))
-            climateType.text = it.current?.weather?.get(0)?.main
-            val icon = it.current?.weather?.get(0)?.icon
-            Picasso.get()
-                .load("http://openweathermap.org/img/wn/$icon@4x.png")
-                .placeholder(R.drawable.ic_baseline_image_24)
-                .into(binding.climateImage)
+        notificationViewModel.getSelectedUnit()
+        notificationViewModel.selectedUnit.observe(viewLifecycleOwner, { unit ->
+            if (unit == "Metric" || unit == "") {
+                homeViewModel.getForecastData(latitude!!, longitude!!, unit)
+                homeViewModel.forecastData.observe(viewLifecycleOwner, Observer {
+                    minMaxTv.text =
+                        (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
+                            R.string.celsius
+                        )
+                                + "  " + getString(R.string.night) + " " + it.daily?.get(0)?.temp?.night?.roundToInt() + getString(
+                            R.string.celsius
+                        ))
+                    temperatureTv.text =
+                        (it.current?.temp?.roundToInt().toString() + getString(R.string.celsius))
+                    feelsLikeTv.text =
+                        (getString(R.string.feels_like) + " " + it.current?.feelsLike?.roundToInt() + getString(
+                            R.string.celsius
+                        ))
+                    climateType.text = it.current?.weather?.get(0)?.main
+                    val icon = it.current?.weather?.get(0)?.icon
+                    Picasso.get()
+                        .load("http://openweathermap.org/img/wn/$icon@4x.png")
+                        .placeholder(R.drawable.ic_baseline_image_24)
+                        .into(binding.climateImage)
+                })
+            } else {
+                homeViewModel.getForecastData(latitude!!, longitude!!, unit)
+                homeViewModel.forecastData.observe(viewLifecycleOwner, Observer {
+                    minMaxTv.text =
+                        (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
+                            R.string.fahrenheit
+                        )
+                                + "  " + getString(R.string.night) + " " + it.daily?.get(0)?.temp?.night?.roundToInt() + getString(
+                            R.string.fahrenheit
+                        ))
+                    temperatureTv.text =
+                        (it.current?.temp?.roundToInt().toString() + getString(R.string.fahrenheit))
+                    feelsLikeTv.text =
+                        (getString(R.string.feels_like) + " " + it.current?.feelsLike?.roundToInt() + getString(
+                            R.string.fahrenheit
+                        ))
+                    climateType.text = it.current?.weather?.get(0)?.main
+                    val icon = it.current?.weather?.get(0)?.icon
+                    Picasso.get()
+                        .load("http://openweathermap.org/img/wn/$icon@4x.png")
+                        .placeholder(R.drawable.ic_baseline_image_24)
+                        .into(binding.climateImage)
+                })
+            }
         })
+
     }
 
     private fun hasLocationPermission() {

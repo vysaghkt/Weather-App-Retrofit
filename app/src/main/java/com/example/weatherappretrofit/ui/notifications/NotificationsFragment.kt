@@ -7,16 +7,15 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.weatherappretrofit.databinding.FragmentNotificationsBinding
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
 
 class NotificationsFragment : Fragment() {
 
     private var _binding: FragmentNotificationsBinding? = null
 
-    private lateinit var storeDataRepository: StoreDataRepository
+    private val notificationViewModel: NotificationsViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -30,14 +29,10 @@ class NotificationsFragment : Fragment() {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        storeDataRepository = context?.let { StoreDataRepository(it) }!!
-
-        lifecycleScope.async {
-            storeDataRepository.readUnits().collect {
-                setSelectedOptionSpinner(it)
-            }
-        }
-
+        notificationViewModel.getSelectedUnit()
+        notificationViewModel.selectedUnit.observe(viewLifecycleOwner, {
+            setSelectedOptionSpinner(it)
+        })
 
         return root
     }
@@ -62,10 +57,9 @@ class NotificationsFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                lifecycleScope.async {
-                    storeDataRepository.storeUnits(parent?.getItemAtPosition(position).toString())
-
-                }
+                notificationViewModel.setSelectedUnit(
+                    parent?.getItemAtPosition(position).toString()
+                )
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
