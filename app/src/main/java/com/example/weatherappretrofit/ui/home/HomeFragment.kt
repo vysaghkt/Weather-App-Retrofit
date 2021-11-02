@@ -6,21 +6,19 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.example.weatherappretrofit.R
 import com.example.weatherappretrofit.databinding.FragmentHomeBinding
+import com.example.weatherappretrofit.roomdatabase.City
 import com.example.weatherappretrofit.ui.notifications.NotificationsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -42,7 +40,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var dateTextView: TextView
     private lateinit var searchButton: Button
-    private lateinit var citySearch: EditText
+    private lateinit var citySearch: AutoCompleteTextView
     private lateinit var minMaxTv: TextView
     private lateinit var temperatureTv: TextView
     private lateinit var feelsLikeTv: TextView
@@ -71,13 +69,27 @@ class HomeFragment : Fragment() {
         feelsLikeTv = binding.feelsLike
         climateType = binding.climateType
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
 
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
             dateTextView.text = it
         })
 
         hasLocationPermission()
+
+        homeViewModel.readAllCity?.observe(viewLifecycleOwner, {
+            val cityList = mutableListOf<String>()
+            for (element in it) {
+                cityList.add(element.cityName)
+            }
+            val arrayAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                cityList
+            )
+            citySearch.setAdapter(arrayAdapter)
+        })
 
         searchButton.setOnClickListener {
             if (citySearch.text.isEmpty()) {
@@ -91,13 +103,30 @@ class HomeFragment : Fragment() {
             getPresentLocation()
         }
 
+        binding.favouriteIcon.setOnClickListener {
+            homeViewModel.addCity(City(0, citySearch.text.toString()))
+            setSelectedBackground()
+        }
+
         return root
+    }
+
+    private fun setSelectedBackground() {
+        object : CountDownTimer(1000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
+            }
+
+            override fun onFinish() {
+                binding.favouriteIcon.setImageResource(R.drawable.ic_baseline_star_outline_24)
+            }
+
+        }.start()
     }
 
     private fun setWeatherDataUI() {
 
         homeViewModel.getWeatherData(citySearch.text.toString())
-        citySearch.setText("")
 
         homeViewModel.weatherData.observe(viewLifecycleOwner, Observer {
             val lat = it.coord?.lat
@@ -111,7 +140,7 @@ class HomeFragment : Fragment() {
         notificationViewModel.getSelectedUnit()
         notificationViewModel.selectedUnit.observe(viewLifecycleOwner, { unit ->
             if (unit == "Metric" || unit == "") {
-                homeViewModel.getForecastData(latitude!!, longitude!!, unit)
+                homeViewModel.getForecastData(latitude!!, longitude!!, "Metric")
                 homeViewModel.forecastData.observe(viewLifecycleOwner, Observer {
                     minMaxTv.text =
                         (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
@@ -169,7 +198,7 @@ class HomeFragment : Fragment() {
             )
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                    if (report!!.areAllPermissionsGranted()){
+                    if (report!!.areAllPermissionsGranted()) {
                         getPresentLocation()
                     } else if (report.isAnyPermissionPermanentlyDenied) {
                         showRationalDialogForPermission()
@@ -187,7 +216,7 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun getPresentLocation(){
+    private fun getPresentLocation() {
         fusedLocationProviderClient.lastLocation.addOnSuccessListener {
             getForecastWeather(it.latitude, it.longitude)
         }

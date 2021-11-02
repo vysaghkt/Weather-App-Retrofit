@@ -1,18 +1,19 @@
 package com.example.weatherappretrofit.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import com.example.weatherappretrofit.currentweather.model.WeatherModel
 import com.example.weatherappretrofit.forecastweather.model.ForecastWeatherModel
 import com.example.weatherappretrofit.repository.Repository
+import com.example.weatherappretrofit.roomdatabase.City
+import com.example.weatherappretrofit.roomdatabase.CityDatabase
+import com.example.weatherappretrofit.roomdatabase.CityRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = Repository()
 
@@ -38,6 +39,23 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             val data = repository.getForecastData(lat, lon, unit)
             forecastData.value = data
+        }
+    }
+
+    //Code for Room Database
+
+    var readAllCity: LiveData<List<City>>? = null
+    private var cityRepository: CityRepository? = null
+
+    init {
+        val cityDao = CityDatabase.getDatabaseInstance(application).cityDao()
+        cityRepository = CityRepository(cityDao)
+        readAllCity = cityRepository!!.getAllData
+    }
+
+    fun addCity(city: City) {
+        viewModelScope.launch {
+            cityRepository?.addCity(city)
         }
     }
 }
