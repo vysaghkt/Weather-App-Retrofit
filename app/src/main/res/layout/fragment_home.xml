@@ -1,127 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/weather_background"
     tools:context=".ui.home.HomeFragment">
 
-    <LinearLayout
-        android:id="@+id/llSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/grey"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <AutoCompleteTextView
-            android:id="@+id/citySearch"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:autofillHints=""
-            android:hint="@string/city_hint"
-            android:inputType="text"
-            android:textColor="@color/black" />
-
-        <ImageView
-            android:id="@+id/favouriteIcon"
+        <LinearLayout
+            android:id="@+id/llSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:contentDescription="@string/favorite_icon"
-            android:src="@drawable/ic_baseline_star_outline_24"
-            tools:ignore="ImageContrastCheck" />
+            android:layout_marginTop="10dp"
+            android:background="@color/grey"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/searchButton"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:text="@string/search_button_text"
-            android:textColor="@color/white" />
+            <AutoCompleteTextView
+                android:id="@+id/citySearch"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:hint="@string/city_hint"
+                android:inputType="text"
+                android:textColor="@color/black" />
 
-        <ImageView
-            android:id="@+id/mapIcon"
+            <ImageView
+                android:id="@+id/favouriteIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/favorite_icon"
+                android:src="@drawable/ic_baseline_star_outline_24"
+                tools:ignore="ImageContrastCheck" />
+
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:text="@string/search_button_text"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/mapIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@string/location_icon"
+                android:src="@drawable/ic_baseline_add_location_24" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="5dp"
-            android:contentDescription="@string/location_icon"
-            android:src="@drawable/ic_baseline_add_location_24" />
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llSearch"
+            tools:text="27 October, 11.41 am" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/minMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/dateTime"
+            app:layout_constraintTop_toBottomOf="@id/dateTime"
+            tools:text="27 October, 11.41 am" />
 
-    <TextView
-        android:id="@+id/dateTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llSearch"
-        tools:text="27 October, 11.41 am" />
+        <TextView
+            android:id="@+id/temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="100sp"
+            app:layout_constraintStart_toStartOf="@id/dateTime"
+            app:layout_constraintTop_toBottomOf="@id/minMax"
+            tools:text="27" />
 
-    <TextView
-        android:id="@+id/minMax"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@id/dateTime"
-        app:layout_constraintTop_toBottomOf="@id/dateTime"
-        tools:text="27 October, 11.41 am" />
+        <TextView
+            android:id="@+id/feelsLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/dateTime"
+            app:layout_constraintTop_toBottomOf="@id/temperature"
+            tools:text="Feels Like" />
 
-    <TextView
-        android:id="@+id/temperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/black"
-        android:textSize="100sp"
-        app:layout_constraintStart_toStartOf="@id/dateTime"
-        app:layout_constraintTop_toBottomOf="@id/minMax"
-        tools:text="27" />
+        <ImageView
+            android:id="@+id/climateImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="@string/climate_image"
+            android:src="@drawable/sun"
+            app:layout_constraintBottom_toBottomOf="@id/temperature"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/temperature" />
 
-    <TextView
-        android:id="@+id/feelsLike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@id/dateTime"
-        app:layout_constraintTop_toBottomOf="@id/temperature"
-        tools:text="Feels Like" />
+        <TextView
+            android:id="@+id/climateType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/climateImage"
+            app:layout_constraintTop_toTopOf="@id/feelsLike"
+            tools:text="Haze" />
 
-    <ImageView
-        android:id="@+id/climateImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:contentDescription="@string/climate_image"
-        android:src="@drawable/sun"
-        app:layout_constraintBottom_toBottomOf="@id/temperature"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/temperature" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/climateType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/climateImage"
-        app:layout_constraintTop_toTopOf="@id/feelsLike"
-        tools:text="Haze" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

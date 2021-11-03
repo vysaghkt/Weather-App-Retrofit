@@ -91,6 +91,11 @@ class HomeFragment : Fragment() {
             citySearch.setAdapter(arrayAdapter)
         })
 
+        binding.swipeRefresh.setOnRefreshListener {
+            getPresentLocation()
+            binding.swipeRefresh.isRefreshing = false
+        }
+
         searchButton.setOnClickListener {
             if (citySearch.text.isEmpty()) {
                 Toast.makeText(activity, "Please Enter a City Name", Toast.LENGTH_LONG).show()
