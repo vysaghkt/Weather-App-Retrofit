@@ -24,12 +24,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
     val text: LiveData<String> = _dateTime
 
-    val weatherData = MutableLiveData<WeatherModel>()
+    private val _weatherData = MutableLiveData<WeatherModel>()
+    val weatherData: LiveData<WeatherModel> = _weatherData
 
     fun getWeatherData(city: String) {
         viewModelScope.launch(Dispatchers.Main) {
             val data = repository.getWeatherData(city)
-            weatherData.value = data
+            _weatherData.value = data
         }
     }
 
@@ -57,5 +58,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             cityRepository?.addCity(city)
         }
+    }
+
+    private val _instanceSaved = MutableLiveData<String>("")
+    val instanceSaved: LiveData<String> = _instanceSaved
+
+    fun setInstance(cityName: String) {
+        _instanceSaved.value = cityName
     }
 }
