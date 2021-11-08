@@ -8,14 +8,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import com.example.weatherappretrofit.databinding.FragmentNotificationsBinding
+import com.example.weatherappretrofit.databinding.FragmentSettingsBinding
 
-class NotificationsFragment : Fragment() {
+class SettingsFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private var _binding: FragmentSettingsBinding? = null
 
-    private val notificationViewModel: NotificationsViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,11 +25,11 @@ class NotificationsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        notificationViewModel.getSelectedUnit()
-        notificationViewModel.selectedUnit.observe(viewLifecycleOwner, {
+        settingsViewModel.getSelectedUnit()
+        settingsViewModel.selectedUnit.observe(viewLifecycleOwner, {
             setSelectedOptionSpinner(it)
         })
 
@@ -57,7 +56,7 @@ class NotificationsFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                notificationViewModel.setSelectedUnit(
+                settingsViewModel.setSelectedUnit(
                     parent?.getItemAtPosition(position).toString()
                 )
             }

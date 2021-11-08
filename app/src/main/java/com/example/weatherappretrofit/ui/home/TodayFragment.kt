@@ -12,20 +12,20 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.weatherappretrofit.R
-import com.example.weatherappretrofit.databinding.FragmentHomeBinding
+import com.example.weatherappretrofit.databinding.FragmentTodayBinding
 import com.example.weatherappretrofit.roomdatabase.City
-import com.example.weatherappretrofit.ui.notifications.NotificationsViewModel
+import com.example.weatherappretrofit.ui.notifications.SettingsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
 import kotlin.math.roundToInt
 
-class HomeFragment : Fragment() {
+class TodayFragment : Fragment() {
 
-    private val homeViewModel: HomeViewModel by activityViewModels()
-    private val notificationViewModel: NotificationsViewModel by activityViewModels()
+    private val todayViewModel: TodayViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentTodayBinding? = null
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -39,17 +39,17 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentTodayBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
 
-        homeViewModel.text.observe(viewLifecycleOwner, {
+        todayViewModel.text.observe(viewLifecycleOwner, {
             binding.dateTime.text = it
         })
 
-        homeViewModel.readAllCity?.observe(viewLifecycleOwner, {
+        todayViewModel.readAllCity?.observe(viewLifecycleOwner, {
             val cityList = mutableListOf<String>()
             for (element in it) {
                 cityList.add(element.cityName)
@@ -62,10 +62,10 @@ class HomeFragment : Fragment() {
             binding.citySearch.setAdapter(arrayAdapter)
         })
 
-        notificationViewModel.getSelectedUnit()
-        notificationViewModel.selectedUnit.observe(viewLifecycleOwner, { unitSelected ->
+        settingsViewModel.getSelectedUnit()
+        settingsViewModel.selectedUnit.observe(viewLifecycleOwner, { unitSelected ->
 
-            homeViewModel.instanceSaved.observe(viewLifecycleOwner, {
+            todayViewModel.instanceSaved.observe(viewLifecycleOwner, {
                 if (it != "") {
                     setWeatherDataUI(it, unitSelected)
                     binding.citySearch.setText(it)
@@ -76,6 +76,7 @@ class HomeFragment : Fragment() {
 
             binding.swipeRefresh.setOnRefreshListener {
                 getPresentLocation(unitSelected)
+                binding.citySearch.setText("")
                 binding.swipeRefresh.isRefreshing = false
             }
 
@@ -91,11 +92,12 @@ class HomeFragment : Fragment() {
             }
 
             binding.mapIcon.setOnClickListener {
+                binding.citySearch.setText("")
                 getPresentLocation(unitSelected)
             }
 
             binding.favouriteIcon.setOnClickListener {
-                homeViewModel.addCity(City(0, binding.citySearch.text.toString()))
+                todayViewModel.addCity(City(0, binding.citySearch.text.toString()))
                 setSelectedBackground()
             }
         })
@@ -129,9 +131,9 @@ class HomeFragment : Fragment() {
 
     private fun setWeatherDataUI(city: String, unit: String) {
 
-        homeViewModel.getWeatherData(city)
+        todayViewModel.getWeatherData(city)
 
-        homeViewModel.weatherData.observe(viewLifecycleOwner, {
+        todayViewModel.weatherData.observe(viewLifecycleOwner, {
             val lat = it.coord?.lat
             val lon = it.coord?.lon
             getForecastWeather(lat, lon, unit)
@@ -141,8 +143,8 @@ class HomeFragment : Fragment() {
     private fun getForecastWeather(latitude: Double?, longitude: Double?, unit: String) {
 
         if (unit == "Metric" || unit == "") {
-            homeViewModel.getForecastData(latitude!!, longitude!!, "Metric")
-            homeViewModel.forecastData.observe(viewLifecycleOwner, {
+            todayViewModel.getForecastData(latitude!!, longitude!!, "Metric")
+            todayViewModel.forecastData.observe(viewLifecycleOwner, {
                 binding.minMax.text =
                     (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
                         R.string.celsius
@@ -164,8 +166,8 @@ class HomeFragment : Fragment() {
                     .into(binding.climateImage)
             })
         } else {
-            homeViewModel.getForecastData(latitude!!, longitude!!, unit)
-            homeViewModel.forecastData.observe(viewLifecycleOwner, {
+            todayViewModel.getForecastData(latitude!!, longitude!!, unit)
+            todayViewModel.forecastData.observe(viewLifecycleOwner, {
                 binding.minMax.text =
                     (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
                         R.string.fahrenheit
@@ -192,8 +194,8 @@ class HomeFragment : Fragment() {
     override fun onPause() {
         super.onPause()
 
-        if (binding.citySearch.text.isNotEmpty()) {
-            homeViewModel.setInstance(binding.citySearch.text.toString())
+        if (binding.citySearch.text.toString() != "") {
+            todayViewModel.setInstance(binding.citySearch.text.toString())
         }
     }
 

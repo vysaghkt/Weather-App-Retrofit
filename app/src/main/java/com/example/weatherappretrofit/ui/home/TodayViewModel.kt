@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class TodayViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = Repository()
 

@@ -6,21 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.example.weatherappretrofit.R
-import com.example.weatherappretrofit.databinding.FragmentDashboardBinding
-import com.example.weatherappretrofit.ui.home.HomeViewModel
-import com.example.weatherappretrofit.ui.notifications.NotificationsViewModel
+import com.example.weatherappretrofit.databinding.FragmentDailyBinding
+import com.example.weatherappretrofit.ui.home.TodayViewModel
+import com.example.weatherappretrofit.ui.notifications.SettingsViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
-class DashboardFragment : Fragment() {
+class DailyFragment : Fragment() {
 
-    private val dashboardViewModel: HomeViewModel by activityViewModels()
-    private val notificationViewModel: NotificationsViewModel by activityViewModels()
-    private var _binding: FragmentDashboardBinding? = null
+    private val todayViewModel: TodayViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
+    private var _binding: FragmentDailyBinding? = null
 
     private val forecastList: ArrayList<DailyModel> = arrayListOf()
 
@@ -34,12 +33,12 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentDailyBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        notificationViewModel.selectedUnit.observe(viewLifecycleOwner,{unit ->
+        settingsViewModel.selectedUnit.observe(viewLifecycleOwner,{ unit ->
             if (unit == "Metric" || unit == ""){
-                dashboardViewModel.forecastData.observe(viewLifecycleOwner, Observer {
+                todayViewModel.forecastData.observe(viewLifecycleOwner, {
                     val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
                     for (i in 0..7) {
 
@@ -70,7 +69,7 @@ class DashboardFragment : Fragment() {
                     }
                 })
             }else{
-                dashboardViewModel.forecastData.observe(viewLifecycleOwner, Observer {
+                todayViewModel.forecastData.observe(viewLifecycleOwner, {
                     val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
                     for (i in 0..7) {
 
