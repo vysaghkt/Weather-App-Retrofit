@@ -52,13 +52,15 @@ class DashboardFragment : Fragment() {
                             (it.daily[i]?.temp?.day?.roundToInt().toString() + getString(R.string.celsius))
                         val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
                             .toString() + getString(R.string.celsius))
-                        forecastList.add(
-                            DailyModel(
-                                date,
-                                tempDay,
-                                tempNight
+                        if (forecastList.size < 8 ) {
+                            forecastList.add(
+                                DailyModel(
+                                    date,
+                                    tempDay,
+                                    tempNight
+                                )
                             )
-                        )
+                        }
                     }
                     binding.recyclerView.adapter = context?.let { it1 ->
                         ForecastAdapter(
@@ -81,13 +83,15 @@ class DashboardFragment : Fragment() {
                             (it.daily[i]?.temp?.day?.roundToInt().toString() + getString(R.string.fahrenheit))
                         val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
                             .toString() + getString(R.string.fahrenheit))
-                        forecastList.add(
-                            DailyModel(
-                                date,
-                                tempDay,
-                                tempNight
+                        if (forecastList.size < 8) {
+                            forecastList.add(
+                                DailyModel(
+                                    date,
+                                    tempDay,
+                                    tempNight
+                                )
                             )
-                        )
+                        }
                     }
                     binding.recyclerView.adapter = context?.let { it1 ->
                         ForecastAdapter(
