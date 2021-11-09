@@ -36,81 +36,53 @@ class DailyFragment : Fragment() {
         _binding = FragmentDailyBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        settingsViewModel.selectedUnit.observe(viewLifecycleOwner, { unit ->
-            if (unit == "Metric" || unit == "") {
-                todayViewModel.forecastData.observe(viewLifecycleOwner, {
-                    val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
-                    for (i in 0..7) {
-
-                        val dt = it.daily?.get(i)?.dt?.toLong()
-                        var date = sdf.format(Date(dt?.times(1000)!!))
-                        if (i == 0) {
-                            date = getString(R.string.title_home)
-                        }
-                        val tempDay =
-                            (it.daily[i]?.temp?.day?.roundToInt()
-                                .toString() + getString(R.string.celsius))
-                        val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
-                            .toString() + getString(R.string.celsius))
-                        val iconCode = it.daily[i]?.weather?.get(0)?.icon!!
-                        if (forecastList.size < 8) {
-                            forecastList.add(
-                                DailyModel(
-                                    date,
-                                    tempDay,
-                                    tempNight,
-                                    iconCode
-                                )
-                            )
-                        }
-                    }
-                    binding.recyclerView.adapter = context?.let { it1 ->
-                        ForecastAdapter(
-                            forecastList,
-                            it1
-                        )
-                    }
-                })
-            } else {
-                todayViewModel.forecastData.observe(viewLifecycleOwner, {
-                    val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
-                    for (i in 0..7) {
-
-                        val dt = it.daily?.get(i)?.dt?.toLong()
-                        var date = sdf.format(Date(dt?.times(1000)!!))
-                        if (i == 0) {
-                            date = getString(R.string.title_home)
-                        }
-                        val tempDay =
-                            (it.daily[i]?.temp?.day?.roundToInt()
-                                .toString() + getString(R.string.fahrenheit))
-                        val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
-                            .toString() + getString(R.string.fahrenheit))
-                        val iconCode = it.daily[i]?.weather?.get(0)?.icon!!
-                        if (forecastList.size < 8) {
-                            forecastList.add(
-                                DailyModel(
-                                    date,
-                                    tempDay,
-                                    tempNight,
-                                    iconCode
-                                )
-                            )
-                        }
-                    }
-                    binding.recyclerView.adapter = context?.let { it1 ->
-                        ForecastAdapter(
-                            forecastList,
-                            it1
-                        )
-                    }
-                })
-            }
-
+        settingsViewModel.selectedUnit.observe(viewLifecycleOwner, {
+            setRecyclerview(it)
         })
-
-
         return root
+    }
+
+    private fun setRecyclerview(unit: String) {
+
+        val degreeUnit = if (unit == "Imperial") {
+            getString(R.string.fahrenheit)
+        } else {
+            getString(R.string.celsius)
+        }
+
+        todayViewModel.forecastData.observe(viewLifecycleOwner, {
+            val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
+            for (i in 0..7) {
+
+                val dt = it.daily?.get(i)?.dt?.toLong()
+                var date = sdf.format(Date(dt?.times(1000)!!))
+                if (i == 0) {
+                    date = getString(R.string.title_home)
+                }
+                val tempDay =
+                    (it.daily[i]?.temp?.day?.roundToInt()
+                        .toString() + degreeUnit)
+                val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
+                    .toString() + degreeUnit)
+                val iconCode = it.daily[i]?.weather?.get(0)?.icon!!
+                if (forecastList.size < 8) {
+                    forecastList.add(
+                        DailyModel(
+                            date,
+                            tempDay,
+                            tempNight,
+                            iconCode
+                        )
+                    )
+                }
+            }
+            binding.recyclerView.adapter = context?.let { it1 ->
+                ForecastAdapter(
+                    forecastList,
+                    it1
+                )
+            }
+        })
     }
 
     override fun onDestroyView() {

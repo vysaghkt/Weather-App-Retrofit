@@ -140,56 +140,40 @@ class TodayFragment : Fragment() {
 
     private fun getForecastWeather(latitude: Double?, longitude: Double?, unit: String) {
 
-        if (unit == "Metric" || unit == "") {
-            todayViewModel.getForecastData(latitude!!, longitude!!, "Metric")
-            todayViewModel.forecastData.observe(viewLifecycleOwner, {
-                val sdf = SimpleDateFormat("dd MMMM, hh:mm", Locale.getDefault())
-                val updatedDateTime = sdf.format(Date(it?.current?.dt?.toLong()?.times(1000)!!))
-                binding.dateTime.text = updatedDateTime
-                binding.minMax.text =
-                    (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
-                        R.string.celsius
-                    )
-                            + "  " + getString(R.string.night) + " " + it.daily?.get(0)?.temp?.night?.roundToInt() + getString(
-                        R.string.celsius
-                    ))
-                binding.temperature.text =
-                    (it.current.temp?.roundToInt().toString() + getString(R.string.celsius))
-                binding.feelsLike.text =
-                    (getString(R.string.feels_like) + " " + it.current.feelsLike?.roundToInt() + getString(
-                        R.string.celsius
-                    ))
-                binding.climateType.text = it.current.weather?.get(0)?.main
-                val icon = it.current.weather?.get(0)?.icon
-                Picasso.get()
-                    .load("http://openweathermap.org/img/wn/$icon@4x.png")
-                    .placeholder(R.drawable.ic_baseline_image_24)
-                    .into(binding.climateImage)
-            })
+        val unitSelected = if (unit == "Imperial") {
+            "Imperial"
         } else {
-            todayViewModel.getForecastData(latitude!!, longitude!!, unit)
-            todayViewModel.forecastData.observe(viewLifecycleOwner, {
-                binding.minMax.text =
-                    (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
-                        R.string.fahrenheit
-                    )
-                            + "  " + getString(R.string.night) + " " + it.daily?.get(0)?.temp?.night?.roundToInt() + getString(
-                        R.string.fahrenheit
-                    ))
-                binding.temperature.text =
-                    (it.current?.temp?.roundToInt().toString() + getString(R.string.fahrenheit))
-                binding.feelsLike.text =
-                    (getString(R.string.feels_like) + " " + it.current?.feelsLike?.roundToInt() + getString(
-                        R.string.fahrenheit
-                    ))
-                binding.climateType.text = it.current?.weather?.get(0)?.main
-                val icon = it.current?.weather?.get(0)?.icon
-                Picasso.get()
-                    .load("http://openweathermap.org/img/wn/$icon@4x.png")
-                    .placeholder(R.drawable.ic_baseline_image_24)
-                    .into(binding.climateImage)
-            })
+            "Metric"
         }
+
+        val degreeUnit = if (unitSelected == "Metric") {
+            getString(
+                R.string.celsius
+            )
+        } else {
+            getString(
+                R.string.fahrenheit
+            )
+        }
+        todayViewModel.getForecastData(latitude!!, longitude!!, unitSelected)
+        todayViewModel.forecastData.observe(viewLifecycleOwner, {
+            val sdf = SimpleDateFormat("dd MMMM, hh:mm", Locale.getDefault())
+            val updatedDateTime = sdf.format(Date(it?.current?.dt?.toLong()?.times(1000)!!))
+            binding.dateTime.text = updatedDateTime
+            binding.minMax.text =
+                (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + degreeUnit
+                        + "  " + getString(R.string.night) + " " + it.daily?.get(0)?.temp?.night?.roundToInt() + degreeUnit)
+            binding.temperature.text =
+                (it.current.temp?.roundToInt().toString() + degreeUnit)
+            binding.feelsLike.text =
+                (getString(R.string.feels_like) + " " + it.current.feelsLike?.roundToInt() + degreeUnit)
+            binding.climateType.text = it.current.weather?.get(0)?.main
+            val icon = it.current.weather?.get(0)?.icon
+            Picasso.get()
+                .load("http://openweathermap.org/img/wn/$icon@4x.png")
+                .placeholder(R.drawable.ic_baseline_image_24)
+                .into(binding.climateImage)
+        })
     }
 
     override fun onPause() {
