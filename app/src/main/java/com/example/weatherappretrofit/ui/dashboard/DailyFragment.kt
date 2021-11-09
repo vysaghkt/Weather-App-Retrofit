@@ -36,8 +36,8 @@ class DailyFragment : Fragment() {
         _binding = FragmentDailyBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        settingsViewModel.selectedUnit.observe(viewLifecycleOwner,{ unit ->
-            if (unit == "Metric" || unit == ""){
+        settingsViewModel.selectedUnit.observe(viewLifecycleOwner, { unit ->
+            if (unit == "Metric" || unit == "") {
                 todayViewModel.forecastData.observe(viewLifecycleOwner, {
                     val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
                     for (i in 0..7) {
@@ -48,15 +48,18 @@ class DailyFragment : Fragment() {
                             date = getString(R.string.title_home)
                         }
                         val tempDay =
-                            (it.daily[i]?.temp?.day?.roundToInt().toString() + getString(R.string.celsius))
+                            (it.daily[i]?.temp?.day?.roundToInt()
+                                .toString() + getString(R.string.celsius))
                         val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
                             .toString() + getString(R.string.celsius))
-                        if (forecastList.size < 8 ) {
+                        val iconCode = it.daily[i]?.weather?.get(0)?.icon!!
+                        if (forecastList.size < 8) {
                             forecastList.add(
                                 DailyModel(
                                     date,
                                     tempDay,
-                                    tempNight
+                                    tempNight,
+                                    iconCode
                                 )
                             )
                         }
@@ -68,7 +71,7 @@ class DailyFragment : Fragment() {
                         )
                     }
                 })
-            }else{
+            } else {
                 todayViewModel.forecastData.observe(viewLifecycleOwner, {
                     val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
                     for (i in 0..7) {
@@ -79,15 +82,18 @@ class DailyFragment : Fragment() {
                             date = getString(R.string.title_home)
                         }
                         val tempDay =
-                            (it.daily[i]?.temp?.day?.roundToInt().toString() + getString(R.string.fahrenheit))
+                            (it.daily[i]?.temp?.day?.roundToInt()
+                                .toString() + getString(R.string.fahrenheit))
                         val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
                             .toString() + getString(R.string.fahrenheit))
+                        val iconCode = it.daily[i]?.weather?.get(0)?.icon!!
                         if (forecastList.size < 8) {
                             forecastList.add(
                                 DailyModel(
                                     date,
                                     tempDay,
-                                    tempNight
+                                    tempNight,
+                                    iconCode
                                 )
                             )
                         }
