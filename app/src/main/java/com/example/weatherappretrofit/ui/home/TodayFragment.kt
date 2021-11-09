@@ -18,6 +18,8 @@ import com.example.weatherappretrofit.ui.notifications.SettingsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.roundToInt
 
 class TodayFragment : Fragment() {
@@ -44,10 +46,6 @@ class TodayFragment : Fragment() {
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
-
-        todayViewModel.text.observe(viewLifecycleOwner, {
-            binding.dateTime.text = it
-        })
 
         todayViewModel.readAllCity?.observe(viewLifecycleOwner, {
             val cityList = mutableListOf<String>()
@@ -145,6 +143,9 @@ class TodayFragment : Fragment() {
         if (unit == "Metric" || unit == "") {
             todayViewModel.getForecastData(latitude!!, longitude!!, "Metric")
             todayViewModel.forecastData.observe(viewLifecycleOwner, {
+                val sdf = SimpleDateFormat("dd MMMM, hh:mm", Locale.getDefault())
+                val updatedDateTime = sdf.format(Date(it?.current?.dt?.toLong()?.times(1000)!!))
+                binding.dateTime.text = updatedDateTime
                 binding.minMax.text =
                     (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + getString(
                         R.string.celsius
@@ -153,13 +154,13 @@ class TodayFragment : Fragment() {
                         R.string.celsius
                     ))
                 binding.temperature.text =
-                    (it.current?.temp?.roundToInt().toString() + getString(R.string.celsius))
+                    (it.current.temp?.roundToInt().toString() + getString(R.string.celsius))
                 binding.feelsLike.text =
-                    (getString(R.string.feels_like) + " " + it.current?.feelsLike?.roundToInt() + getString(
+                    (getString(R.string.feels_like) + " " + it.current.feelsLike?.roundToInt() + getString(
                         R.string.celsius
                     ))
-                binding.climateType.text = it.current?.weather?.get(0)?.main
-                val icon = it.current?.weather?.get(0)?.icon
+                binding.climateType.text = it.current.weather?.get(0)?.main
+                val icon = it.current.weather?.get(0)?.icon
                 Picasso.get()
                     .load("http://openweathermap.org/img/wn/$icon@4x.png")
                     .placeholder(R.drawable.ic_baseline_image_24)
@@ -196,6 +197,8 @@ class TodayFragment : Fragment() {
 
         if (binding.citySearch.text.toString() != "") {
             todayViewModel.setInstance(binding.citySearch.text.toString())
+        } else {
+            todayViewModel.setInstance("")
         }
     }
 

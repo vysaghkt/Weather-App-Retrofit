@@ -10,19 +10,10 @@ import com.example.weatherappretrofit.roomdatabase.CityDatabase
 import com.example.weatherappretrofit.roomdatabase.CityRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 class TodayViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = Repository()
-
-    private val _dateTime = MutableLiveData<String>().apply {
-        val sdf = SimpleDateFormat("d MMMM, hh:mm a", Locale.getDefault())
-        val date = sdf.format(Date()).toString()
-        value = date
-    }
-    val text: LiveData<String> = _dateTime
 
     private val _weatherData = MutableLiveData<WeatherModel>()
     val weatherData: LiveData<WeatherModel> = _weatherData
