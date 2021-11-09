@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/forecastDay"
@@ -68,10 +68,11 @@
         android:id="@+id/forecastIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/climate_image"
         android:src="@drawable/sun"
-        app:layout_constraintBottom_toBottomOf="@id/forecastDay"
+        app:layout_constraintBottom_toBottomOf="@id/forecastTempNight"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/forecastDay" />
+        app:layout_constraintTop_toTopOf="@id/forecastTempDay" />
 
     <View
         android:layout_width="match_parent"

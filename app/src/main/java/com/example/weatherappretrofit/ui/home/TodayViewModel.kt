@@ -25,12 +25,13 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    val forecastData = MutableLiveData<ForecastWeatherModel>()
+    private val _forecastData = MutableLiveData<ForecastWeatherModel>()
+    val forecastData: LiveData<ForecastWeatherModel> = _forecastData
 
     fun getForecastData(lat: Double, lon: Double, unit: String) {
         viewModelScope.launch(Dispatchers.Main) {
             val data = repository.getForecastData(lat, lon, unit)
-            forecastData.value = data
+            _forecastData.value = data
         }
     }
 
@@ -51,7 +52,7 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val _instanceSaved = MutableLiveData<String>("")
+    private val _instanceSaved = MutableLiveData("")
     val instanceSaved: LiveData<String> = _instanceSaved
 
     fun setInstance(cityName: String) {

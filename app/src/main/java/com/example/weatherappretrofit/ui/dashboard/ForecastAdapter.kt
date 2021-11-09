@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherappretrofit.R
 import com.squareup.picasso.Picasso
 
-class ForecastAdapter(private val items: ArrayList<DailyModel>, private val context: Context) :
+class ForecastAdapter(private val items: List<DailyModel>, private val context: Context) :
     RecyclerView.Adapter<ForecastAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
