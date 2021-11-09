@@ -2,7 +2,7 @@ package com.example.weatherappretrofit.ui.home
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.weatherappretrofit.currentweather.model.WeatherModel
+import com.example.weatherappretrofit.model.WeatherModel
 import com.example.weatherappretrofit.forecastweather.model.ForecastWeatherModel
 import com.example.weatherappretrofit.repository.Repository
 import com.example.weatherappretrofit.roomdatabase.City

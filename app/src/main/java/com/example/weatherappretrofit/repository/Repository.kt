@@ -1,9 +1,8 @@
 package com.example.weatherappretrofit.repository
 
-import com.example.weatherappretrofit.currentweather.model.WeatherModel
+import com.example.weatherappretrofit.model.WeatherModel
 import com.example.weatherappretrofit.constants.Constants
-import com.example.weatherappretrofit.currentweather.retrofit.RetrofitInstance
-import com.example.weatherappretrofit.forecastweather.retrofit.ForecastRetrofitInstance
+import com.example.weatherappretrofit.retrofit.RetrofitInstance
 import com.example.weatherappretrofit.forecastweather.model.ForecastWeatherModel
 
 class Repository {
@@ -13,7 +12,7 @@ class Repository {
     }
 
     suspend fun getForecastData(lat: Double, lon: Double, unit: String): ForecastWeatherModel {
-        return ForecastRetrofitInstance.forecastApi.getForecastData(
+        return RetrofitInstance.api.getForecastData(
             lat,
             lon,
             unit,
