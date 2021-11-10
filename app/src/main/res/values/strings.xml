@@ -4,19 +4,28 @@
     <string name="title_dashboard">Daily</string>
     <string name="title_notifications">Settings</string>
 
-    <!-- Home Fragment Layout -->
+    <!-- Today Fragment Layout -->
     <string name="city_hint">City</string>
     <string name="search_button_text">GO</string>
     <string name="favorite_icon">Favourites</string>
     <string name="location_icon">Location</string>
     <string name="climate_image">Climate</string>
 
-    <!--Home Fragment-->
+    <!--Today Fragment-->
     <string name="day">Day</string>
     <string name="night">Night</string>
     <string name="feels_like">Feels Like</string>
     <string name="celsius">\u2103</string>
     <string name="fahrenheit">\u2109</string>
+    <string name="today_fragment_time_format">dd MMMM, hh:mm</string>
+    <string name="link_for_icon">http://openweathermap.org/img/wn/%s@4x.png</string>
 
+    <!--Settings Fragment-->
     <string name="units">Units</string>
+
+    <string name="daily_fragment_time_format">EE, dd MMMM</string>
+
+    <string name="no_city_entered">Please Enter a City Name</string>
+    <string name="imperial">Imperial</string>
+    <string name="metric">Metric</string>
 </resources>

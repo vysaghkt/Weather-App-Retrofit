@@ -69,7 +69,8 @@ class TodayFragment : Fragment() {
 
             binding.searchButton.setOnClickListener {
                 if (binding.citySearch.text.isEmpty()) {
-                    Toast.makeText(activity, "Please Enter a City Name", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, getString(R.string.no_city_entered), Toast.LENGTH_LONG)
+                        .show()
                 } else {
                     setWeatherDataUI(binding.citySearch.text.toString(), unitSelected)
                 }
@@ -84,8 +85,16 @@ class TodayFragment : Fragment() {
             }
 
             binding.favouriteIcon.setOnClickListener {
-                todayViewModel.addCity(City(0, binding.citySearch.text.toString()))
-                setSelectedBackground()
+                if (binding.citySearch.text.isNotEmpty()) {
+                    todayViewModel.addCity(City(0, binding.citySearch.text.toString()))
+                    setSelectedBackground()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.no_city_entered),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         })
 
@@ -145,9 +154,9 @@ class TodayFragment : Fragment() {
     private fun getForecastWeather(latitude: Double?, longitude: Double?, unit: String) {
 
         val unitSelected = if (unit == "Imperial") {
-            "Imperial"
+            getString(R.string.imperial)
         } else {
-            "Metric"
+            getString(R.string.metric)
         }
 
         val degreeUnit = if (unitSelected == "Metric") {
@@ -161,7 +170,8 @@ class TodayFragment : Fragment() {
         }
         todayViewModel.getForecastData(latitude!!, longitude!!, unitSelected)
         todayViewModel.forecastData.observe(viewLifecycleOwner, {
-            val sdf = SimpleDateFormat("dd MMMM, hh:mm", Locale.getDefault())
+            val sdf =
+                SimpleDateFormat(getString(R.string.today_fragment_time_format), Locale.ENGLISH)
             val updatedDateTime = sdf.format(Date(it?.current?.dt?.toLong()?.times(1000)!!))
             binding.dateTime.text = updatedDateTime
             binding.minMax.text =
@@ -174,7 +184,7 @@ class TodayFragment : Fragment() {
             binding.climateType.text = it.current.weather?.get(0)?.main
             val icon = it.current.weather?.get(0)?.icon
             Picasso.get()
-                .load("http://openweathermap.org/img/wn/$icon@4x.png")
+                .load(getString(R.string.link_for_icon, icon))
                 .placeholder(R.drawable.ic_baseline_image_24)
                 .into(binding.climateImage)
         })

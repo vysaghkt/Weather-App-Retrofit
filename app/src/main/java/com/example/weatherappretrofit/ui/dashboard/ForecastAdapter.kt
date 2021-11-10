@@ -33,7 +33,8 @@ class ForecastAdapter(private val items: List<DailyModel>, private val context: 
         holder.dayTextView.text = item.dayOfWeek
         holder.dayTemp.text = item.dayTemp
         holder.nightTemp.text = item.nightTemp
-        Picasso.get().load("http://openweathermap.org/img/wn/${item.iconCode}@4x.png")
+        Picasso.get()
+            .load(item.iconLink)
             .placeholder(R.drawable.ic_baseline_image_24)
             .into(holder.climateIcon)
     }

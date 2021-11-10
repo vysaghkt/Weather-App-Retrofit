@@ -19,6 +19,10 @@ import kotlin.math.roundToInt
 
 class DailyFragment : Fragment() {
 
+    companion object {
+        private const val FORECAST_MAX_DAYS = 7
+    }
+
     private val todayViewModel: TodayViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by activityViewModels()
     private var _binding: FragmentDailyBinding? = null
@@ -45,9 +49,9 @@ class DailyFragment : Fragment() {
         settingsViewModel.getSelectedUnit()
         settingsViewModel.selectedUnit.observe(viewLifecycleOwner, {
             val unit = if (it == "Imperial") {
-                "Imperial"
+                getString(R.string.imperial)
             } else {
-                "Metric"
+                getString(R.string.metric)
             }
             todayViewModel.instanceSaved.observe(viewLifecycleOwner, { cityName ->
                 if (cityName != "") {
@@ -93,8 +97,9 @@ class DailyFragment : Fragment() {
 
         todayViewModel.forecastData.observe(viewLifecycleOwner, {
             forecastList.clear()
-            val sdf = SimpleDateFormat("EE, dd MMMM", Locale.ENGLISH)
-            for (i in 0..7) {
+            val sdf =
+                SimpleDateFormat(getString(R.string.daily_fragment_time_format), Locale.ENGLISH)
+            for (i in 0..FORECAST_MAX_DAYS) {
 
                 val dt = it.daily?.get(i)?.dt?.toLong()
                 var date = sdf.format(Date(dt?.times(1000)!!))
@@ -107,13 +112,14 @@ class DailyFragment : Fragment() {
                 val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
                     .toString() + degreeUnit)
                 val iconCode = it.daily[i]?.weather?.get(0)?.icon!!
+                val iconLink = getString(R.string.link_for_icon, iconCode)
 
                 forecastList.add(
                     DailyModel(
                         date,
                         tempDay,
                         tempNight,
-                        iconCode
+                        iconLink
                     )
                 )
             }

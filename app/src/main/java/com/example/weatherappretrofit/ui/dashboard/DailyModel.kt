@@ -4,5 +4,5 @@ data class DailyModel(
     val dayOfWeek: String,
     val dayTemp: String,
     val nightTemp: String,
-    val iconCode: String
+    val iconLink: String
 )
