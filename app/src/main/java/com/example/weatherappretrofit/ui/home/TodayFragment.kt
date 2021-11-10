@@ -47,18 +47,7 @@ class TodayFragment : Fragment() {
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
 
-        todayViewModel.readAllCity?.observe(viewLifecycleOwner, {
-            val cityList = mutableListOf<String>()
-            for (element in it) {
-                cityList.add(element.cityName)
-            }
-            val arrayAdapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_spinner_dropdown_item,
-                cityList
-            )
-            binding.citySearch.setAdapter(arrayAdapter)
-        })
+        setFavouriteCityAdapter()
 
         settingsViewModel.getSelectedUnit()
         settingsViewModel.selectedUnit.observe(viewLifecycleOwner, { unitSelected ->
@@ -101,6 +90,21 @@ class TodayFragment : Fragment() {
         })
 
         return root
+    }
+
+    private fun setFavouriteCityAdapter() {
+        todayViewModel.readAllCity?.observe(viewLifecycleOwner, {
+            val cityList = mutableListOf<String>()
+            for (element in it) {
+                cityList.add(element.cityName)
+            }
+            val arrayAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                cityList
+            )
+            binding.citySearch.setAdapter(arrayAdapter)
+        })
     }
 
     @SuppressLint("MissingPermission")
