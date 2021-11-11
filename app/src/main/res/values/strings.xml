@@ -19,6 +19,7 @@
     <string name="fahrenheit">\u2109</string>
     <string name="today_fragment_time_format">dd MMMM, hh:mm</string>
     <string name="link_for_icon">http://openweathermap.org/img/wn/%s@4x.png</string>
+    <string name="no_internet">Check Network Connection</string>
 
     <!--Settings Fragment-->
     <string name="units">Units</string>

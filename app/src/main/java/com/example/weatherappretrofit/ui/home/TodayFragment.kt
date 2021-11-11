@@ -2,6 +2,7 @@ package com.example.weatherappretrofit.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -54,15 +55,39 @@ class TodayFragment : Fragment() {
 
             todayViewModel.instanceSaved.observe(viewLifecycleOwner, {
                 if (it != "") {
-                    setWeatherDataUI(it, unitSelected)
+                    if (isOnline()) {
+                        setWeatherDataUI(it, unitSelected)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.no_internet),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     binding.citySearch.setText(it)
                 } else {
-                    getPresentLocation(unitSelected)
+                    if (isOnline()) {
+                        getPresentLocation(unitSelected)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.no_internet),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             })
 
             binding.swipeRefresh.setOnRefreshListener {
-                getPresentLocation(unitSelected)
+                if (isOnline()) {
+                    getPresentLocation(unitSelected)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.no_internet),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 binding.citySearch.setText("")
                 binding.swipeRefresh.isRefreshing = false
             }
@@ -72,7 +97,15 @@ class TodayFragment : Fragment() {
                     Toast.makeText(activity, getString(R.string.no_city_entered), Toast.LENGTH_LONG)
                         .show()
                 } else {
-                    setWeatherDataUI(binding.citySearch.text.toString(), unitSelected)
+                    if (isOnline()) {
+                        setWeatherDataUI(binding.citySearch.text.toString(), unitSelected)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.no_internet),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
                 val imm =
                     context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -81,7 +114,15 @@ class TodayFragment : Fragment() {
 
             binding.mapIcon.setOnClickListener {
                 binding.citySearch.setText("")
-                getPresentLocation(unitSelected)
+                if (isOnline()) {
+                    getPresentLocation(unitSelected)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.no_internet),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             binding.favouriteIcon.setOnClickListener {
@@ -99,6 +140,17 @@ class TodayFragment : Fragment() {
         })
 
         return root
+    }
+
+    private fun isOnline(): Boolean {
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            return true
+        }
+        return false
     }
 
     private fun setFavouriteCityAdapter() {

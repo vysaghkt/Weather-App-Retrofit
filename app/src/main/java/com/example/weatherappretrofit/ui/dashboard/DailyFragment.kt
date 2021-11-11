@@ -1,10 +1,13 @@
 package com.example.weatherappretrofit.ui.dashboard
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.weatherappretrofit.R
@@ -54,14 +57,33 @@ class DailyFragment : Fragment() {
                 getString(R.string.metric)
             }
             todayViewModel.instanceSaved.observe(viewLifecycleOwner, { cityName ->
-                if (cityName != "") {
-                    getWeatherData(cityName, unit)
+                if (isOnline()) {
+                    if (cityName != "") {
+                        getWeatherData(cityName, unit)
+                    } else {
+                        getPresentLocation(unit)
+                    }
                 } else {
-                    getPresentLocation(unit)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.no_internet),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         })
         return root
+    }
+
+    private fun isOnline(): Boolean {
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            return true
+        }
+        return false
     }
 
     @SuppressLint("MissingPermission")
