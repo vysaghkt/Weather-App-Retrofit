@@ -205,6 +205,8 @@ class TodayFragment : Fragment() {
 
     private fun getForecastWeather(latitude: Double?, longitude: Double?, unit: String) {
 
+        lastUpdatedTimer()
+
         val unitSelected = if (unit == "Imperial") {
             getString(R.string.imperial)
         } else {
@@ -240,6 +242,21 @@ class TodayFragment : Fragment() {
                 .placeholder(R.drawable.ic_baseline_image_24)
                 .into(binding.climateImage)
         })
+    }
+
+    private fun lastUpdatedTimer() {
+        todayViewModel.resetTimer()
+        todayViewModel.startTimer()
+        todayViewModel.lastUpdated.observe(viewLifecycleOwner, {
+            if (it.toInt() < 60) {
+                binding.lastUpdatedTv.text = getString(R.string.last_updated_seconds, it)
+            } else {
+                val timeInMinute = it.toInt() / 60
+                binding.lastUpdatedTv.text =
+                    getString(R.string.last_updated_minutes, timeInMinute.toString())
+            }
+        })
+
     }
 
     override fun onPause() {

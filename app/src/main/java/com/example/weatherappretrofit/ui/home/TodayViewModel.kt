@@ -1,6 +1,7 @@
 package com.example.weatherappretrofit.ui.home
 
 import android.app.Application
+import android.os.CountDownTimer
 import androidx.lifecycle.*
 import com.example.weatherappretrofit.model.WeatherModel
 import com.example.weatherappretrofit.forecastweather.model.ForecastWeatherModel
@@ -52,10 +53,33 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //Saving Instance
     private val _instanceSaved = MutableLiveData("")
     val instanceSaved: LiveData<String> = _instanceSaved
 
     fun setInstance(cityName: String) {
         _instanceSaved.value = cityName
+    }
+
+    //Last Updated Timer
+    private val _lastUpdated = MutableLiveData<String>()
+    val lastUpdated: LiveData<String> = _lastUpdated
+
+    private val timer = object : CountDownTimer(600000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            _lastUpdated.value = ((600000 - millisUntilFinished) / 1000).toString()
+        }
+
+        override fun onFinish() {
+
+        }
+    }
+
+    fun startTimer() {
+        timer.start()
+    }
+
+    fun resetTimer() {
+        timer.cancel()
     }
 }
