@@ -5,6 +5,8 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -128,7 +130,7 @@ class TodayFragment : Fragment() {
             binding.favouriteIcon.setOnClickListener {
                 if (binding.citySearch.text.isNotEmpty()) {
                     todayViewModel.addCity(City(0, binding.citySearch.text.toString()))
-                    setSelectedBackground()
+                    binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -137,6 +139,21 @@ class TodayFragment : Fragment() {
                     ).show()
                 }
             }
+        })
+
+        binding.citySearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                binding.favouriteIcon.setImageResource(R.drawable.ic_baseline_star_outline_24)
+            }
+
         })
 
         return root
@@ -165,6 +182,11 @@ class TodayFragment : Fragment() {
                 cityList
             )
             binding.citySearch.setAdapter(arrayAdapter)
+
+            binding.citySearch.onItemClickListener =
+                AdapterView.OnItemClickListener { _, _, _, _ ->
+                    binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
+                }
         })
     }
 
@@ -205,8 +227,6 @@ class TodayFragment : Fragment() {
 
     private fun getForecastWeather(latitude: Double?, longitude: Double?, unit: String) {
 
-        lastUpdatedTimer()
-
         val unitSelected = if (unit == "Imperial") {
             getString(R.string.imperial)
         } else {
@@ -242,6 +262,7 @@ class TodayFragment : Fragment() {
                 .placeholder(R.drawable.ic_baseline_image_24)
                 .into(binding.climateImage)
         })
+        lastUpdatedTimer()
     }
 
     private fun lastUpdatedTimer() {
