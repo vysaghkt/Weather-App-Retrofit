@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -33,10 +32,17 @@ class TodayFragment : Fragment() {
     private var _binding: FragmentTodayBinding? = null
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var isChecked: Boolean = false
+    private var selectedPosition: Int? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    override fun onResume() {
+        super.onResume()
+        setFavouriteCityAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,8 +55,6 @@ class TodayFragment : Fragment() {
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
-
-        setFavouriteCityAdapter()
 
         settingsViewModel.getSelectedUnit()
         settingsViewModel.selectedUnit.observe(viewLifecycleOwner, { unitSelected ->
@@ -126,19 +130,6 @@ class TodayFragment : Fragment() {
                     ).show()
                 }
             }
-
-            binding.favouriteIcon.setOnClickListener {
-                if (binding.citySearch.text.isNotEmpty()) {
-                    todayViewModel.addCity(City(0, binding.citySearch.text.toString()))
-                    binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.no_city_entered),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
         })
 
         binding.citySearch.addTextChangedListener(object : TextWatcher {
@@ -152,6 +143,7 @@ class TodayFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 binding.favouriteIcon.setImageResource(R.drawable.ic_baseline_star_outline_24)
+                isChecked = false
             }
 
         })
@@ -173,8 +165,10 @@ class TodayFragment : Fragment() {
     private fun setFavouriteCityAdapter() {
         todayViewModel.readAllCity?.observe(viewLifecycleOwner, {
             val cityList = mutableListOf<String>()
+            val cityIdList = mutableListOf<Int>()
             for (element in it) {
                 cityList.add(element.cityName)
+                cityIdList.add(element.id)
             }
             val arrayAdapter = ArrayAdapter(
                 requireContext(),
@@ -183,11 +177,49 @@ class TodayFragment : Fragment() {
             )
             binding.citySearch.setAdapter(arrayAdapter)
 
-            binding.citySearch.onItemClickListener =
-                AdapterView.OnItemClickListener { _, _, _, _ ->
-                    binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
+            binding.favouriteIcon.setOnClickListener {
+                if (binding.citySearch.text.isNotEmpty()) {
+                    if (!isChecked) {
+                        todayViewModel.addCity(City(0, binding.citySearch.text.toString()))
+                        binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.added_to_favourites),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        isChecked = true
+                    } else {
+                        todayViewModel.deleteCity(
+                            City(
+                                cityIdList[selectedPosition!!],
+                                binding.citySearch.text.toString()
+                            )
+                        )
+                        binding.favouriteIcon.setImageResource(R.drawable.ic_baseline_star_outline_24)
+                        binding.citySearch.setText("")
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.removed_from_favourites),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        isChecked = false
+                    }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.no_city_entered),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+            }
         })
+
+        binding.citySearch.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, position, _ ->
+                selectedPosition = position
+                binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
+                isChecked = true
+            }
     }
 
     @SuppressLint("MissingPermission")
@@ -199,19 +231,6 @@ class TodayFragment : Fragment() {
                 getForecastWeather(0.0, 0.0, unit)
             }
         }
-    }
-
-    private fun setSelectedBackground() {
-        object : CountDownTimer(1000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
-            }
-
-            override fun onFinish() {
-                binding.favouriteIcon.setImageResource(R.drawable.ic_baseline_star_outline_24)
-            }
-
-        }.start()
     }
 
     private fun setWeatherDataUI(city: String, unit: String) {

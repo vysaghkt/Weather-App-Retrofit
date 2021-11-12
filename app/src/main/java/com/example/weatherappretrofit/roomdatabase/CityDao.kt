@@ -11,4 +11,7 @@ interface CityDao {
 
     @Query("SELECT * FROM city_table")
     fun getAllCity(): LiveData<List<City>>
+
+    @Delete
+    suspend fun deleteCity(city: City)
 }

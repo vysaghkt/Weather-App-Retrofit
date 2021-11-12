@@ -9,4 +9,8 @@ class CityRepository(private val cityDao: CityDao) {
     suspend fun addCity(city: City) {
         cityDao.addCity(city)
     }
+
+    suspend fun deleteCity(city: City){
+        cityDao.deleteCity(city)
+    }
 }

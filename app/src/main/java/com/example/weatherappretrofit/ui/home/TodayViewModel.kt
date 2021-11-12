@@ -53,6 +53,12 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun deleteCity(city: City){
+        viewModelScope.launch {
+            cityRepository?.deleteCity(city)
+        }
+    }
+
     //Saving Instance
     private val _instanceSaved = MutableLiveData("")
     val instanceSaved: LiveData<String> = _instanceSaved
