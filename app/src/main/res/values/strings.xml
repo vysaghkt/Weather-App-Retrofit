@@ -24,6 +24,7 @@
     <string name="last_updated_minutes">Last Updated %sm ago</string>
     <string name="added_to_favourites">Added to Favourites</string>
     <string name="removed_from_favourites">Removed from Favourites</string>
+    <string name="city_not_found">City not Found</string>
 
     <!--Settings Fragment-->
     <string name="units">Units</string>

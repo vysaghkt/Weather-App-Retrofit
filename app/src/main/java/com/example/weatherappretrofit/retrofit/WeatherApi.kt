@@ -2,6 +2,7 @@ package com.example.weatherappretrofit.retrofit
 
 import com.example.weatherappretrofit.model.WeatherModel
 import com.example.weatherappretrofit.forecastweather.model.ForecastWeatherModel
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,7 +13,7 @@ interface WeatherApi {
         @Query("q") q: String,
         @Query("units") units: String,
         @Query("appid") appid: String
-    ): WeatherModel
+    ): Response<WeatherModel>
 
     @GET("/data/2.5/onecall")
     suspend fun getForecastData(
@@ -21,5 +22,5 @@ interface WeatherApi {
         @Query("units") units: String,
         @Query("appid") appid: String,
         @Query("exclude") exclude: List<String>
-    ): ForecastWeatherModel
+    ): Response<ForecastWeatherModel>
 }

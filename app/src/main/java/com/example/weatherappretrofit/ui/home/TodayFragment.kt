@@ -237,10 +237,18 @@ class TodayFragment : Fragment() {
 
         todayViewModel.getWeatherData(city)
 
-        todayViewModel.weatherData.observe(viewLifecycleOwner, {
-            val lat = it.coord?.lat
-            val lon = it.coord?.lon
-            getForecastWeather(lat, lon, unit)
+        todayViewModel.weatherData.observe(viewLifecycleOwner, { response ->
+            if (response.isSuccessful) {
+                val lat = response.body()?.coord?.lat
+                val lon = response.body()?.coord?.lon
+                getForecastWeather(lat, lon, unit)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.city_not_found),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         })
     }
 
@@ -262,24 +270,33 @@ class TodayFragment : Fragment() {
             )
         }
         todayViewModel.getForecastData(latitude!!, longitude!!, unitSelected)
-        todayViewModel.forecastData.observe(viewLifecycleOwner, {
-            val sdf =
-                SimpleDateFormat(getString(R.string.today_fragment_time_format), Locale.ENGLISH)
-            val updatedDateTime = sdf.format(Date(it?.current?.dt?.toLong()?.times(1000)!!))
-            binding.dateTime.text = updatedDateTime
-            binding.minMax.text =
-                (getString(R.string.day) + " " + it.daily?.get(0)?.temp?.day?.roundToInt() + degreeUnit
-                        + "  " + getString(R.string.night) + " " + it.daily?.get(0)?.temp?.night?.roundToInt() + degreeUnit)
-            binding.temperature.text =
-                (it.current.temp?.roundToInt().toString() + degreeUnit)
-            binding.feelsLike.text =
-                (getString(R.string.feels_like) + " " + it.current.feelsLike?.roundToInt() + degreeUnit)
-            binding.climateType.text = it.current.weather?.get(0)?.main
-            val icon = it.current.weather?.get(0)?.icon
-            Picasso.get()
-                .load(getString(R.string.link_for_icon, icon))
-                .placeholder(R.drawable.ic_baseline_image_24)
-                .into(binding.climateImage)
+        todayViewModel.forecastData.observe(viewLifecycleOwner, { response ->
+            if (response.isSuccessful) {
+                val sdf =
+                    SimpleDateFormat(getString(R.string.today_fragment_time_format), Locale.ENGLISH)
+                val updatedDateTime =
+                    sdf.format(Date(response.body()?.current?.dt?.toLong()?.times(1000)!!))
+                binding.dateTime.text = updatedDateTime
+                binding.minMax.text =
+                    (getString(R.string.day) + " " + response.body()?.daily?.get(0)?.temp?.day?.roundToInt() + degreeUnit
+                            + "  " + getString(R.string.night) + " " + response.body()?.daily?.get(0)?.temp?.night?.roundToInt() + degreeUnit)
+                binding.temperature.text =
+                    (response.body()?.current!!.temp?.roundToInt().toString() + degreeUnit)
+                binding.feelsLike.text =
+                    (getString(R.string.feels_like) + " " + response.body()?.current!!.feelsLike?.roundToInt() + degreeUnit)
+                binding.climateType.text = response.body()?.current!!.weather?.get(0)?.main
+                val icon = response.body()?.current!!.weather?.get(0)?.icon
+                Picasso.get()
+                    .load(getString(R.string.link_for_icon, icon))
+                    .placeholder(R.drawable.ic_baseline_image_24)
+                    .into(binding.climateImage)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.city_not_found),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         })
         lastUpdatedTimer()
     }

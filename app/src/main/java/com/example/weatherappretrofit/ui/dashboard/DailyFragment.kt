@@ -99,8 +99,20 @@ class DailyFragment : Fragment() {
 
     private fun getWeatherData(city: String, unit: String) {
         todayViewModel.getWeatherData(city)
-        todayViewModel.weatherData.observe(viewLifecycleOwner, {
-            getForecastWeatherData(it.coord?.lat!!, it.coord.lon!!, unit)
+        todayViewModel.weatherData.observe(viewLifecycleOwner, { response ->
+            if (response.isSuccessful) {
+                getForecastWeatherData(
+                    response.body()?.coord?.lat!!,
+                    response.body()?.coord!!.lon!!,
+                    unit
+                )
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.city_not_found),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         })
     }
 
@@ -117,39 +129,47 @@ class DailyFragment : Fragment() {
             getString(R.string.celsius)
         }
 
-        todayViewModel.forecastData.observe(viewLifecycleOwner, {
-            forecastList.clear()
-            val sdf =
-                SimpleDateFormat(getString(R.string.daily_fragment_time_format), Locale.ENGLISH)
-            for (i in 0..FORECAST_MAX_DAYS) {
+        todayViewModel.forecastData.observe(viewLifecycleOwner, { response ->
+            if (response.isSuccessful) {
+                forecastList.clear()
+                val sdf =
+                    SimpleDateFormat(getString(R.string.daily_fragment_time_format), Locale.ENGLISH)
+                for (i in 0..FORECAST_MAX_DAYS) {
 
-                val dt = it.daily?.get(i)?.dt?.toLong()
-                var date = sdf.format(Date(dt?.times(1000)!!))
-                if (i == 0) {
-                    date = getString(R.string.title_home)
-                }
-                val tempDay =
-                    (it.daily[i]?.temp?.day?.roundToInt()
+                    val dt = response.body()?.daily?.get(i)?.dt?.toLong()
+                    var date = sdf.format(Date(dt?.times(1000)!!))
+                    if (i == 0) {
+                        date = getString(R.string.title_home)
+                    }
+                    val tempDay =
+                        (response.body()?.daily!![i]?.temp?.day?.roundToInt()
+                            .toString() + degreeUnit)
+                    val tempNight = (response.body()?.daily!![i]?.temp?.night?.roundToInt()
                         .toString() + degreeUnit)
-                val tempNight = (it.daily[i]?.temp?.night?.roundToInt()
-                    .toString() + degreeUnit)
-                val iconCode = it.daily[i]?.weather?.get(0)?.icon!!
-                val iconLink = getString(R.string.link_for_icon, iconCode)
+                    val iconCode = response.body()?.daily!![i]?.weather?.get(0)?.icon!!
+                    val iconLink = getString(R.string.link_for_icon, iconCode)
 
-                forecastList.add(
-                    DailyModel(
-                        date,
-                        tempDay,
-                        tempNight,
-                        iconLink
+                    forecastList.add(
+                        DailyModel(
+                            date,
+                            tempDay,
+                            tempNight,
+                            iconLink
+                        )
                     )
-                )
-            }
-            binding.recyclerView.adapter = context?.let { it1 ->
-                ForecastAdapter(
-                    forecastList,
-                    it1
-                )
+                }
+                binding.recyclerView.adapter = context?.let { it1 ->
+                    ForecastAdapter(
+                        forecastList,
+                        it1
+                    )
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.city_not_found),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
     }

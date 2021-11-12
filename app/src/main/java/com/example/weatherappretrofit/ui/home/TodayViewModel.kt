@@ -11,13 +11,14 @@ import com.example.weatherappretrofit.roomdatabase.CityDatabase
 import com.example.weatherappretrofit.roomdatabase.CityRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class TodayViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = Repository()
 
-    private val _weatherData = MutableLiveData<WeatherModel>()
-    val weatherData: LiveData<WeatherModel> = _weatherData
+    private val _weatherData = MutableLiveData<Response<WeatherModel>>()
+    val weatherData: LiveData<Response<WeatherModel>> = _weatherData
 
     fun getWeatherData(city: String) {
         viewModelScope.launch(Dispatchers.Main) {
@@ -26,8 +27,8 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val _forecastData = MutableLiveData<ForecastWeatherModel>()
-    val forecastData: LiveData<ForecastWeatherModel> = _forecastData
+    private val _forecastData = MutableLiveData<Response<ForecastWeatherModel>>()
+    val forecastData: LiveData<Response<ForecastWeatherModel>> = _forecastData
 
     fun getForecastData(lat: Double, lon: Double, unit: String) {
         viewModelScope.launch(Dispatchers.Main) {
@@ -53,7 +54,7 @@ class TodayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deleteCity(city: City){
+    fun deleteCity(city: City) {
         viewModelScope.launch {
             cityRepository?.deleteCity(city)
         }
