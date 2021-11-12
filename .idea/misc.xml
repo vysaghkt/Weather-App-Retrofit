@@ -4,7 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/drawable/background_for_favourite_icon.xml" value="0.2703125" />
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/drawable/favourite_star.xml" value="0.2703125" />
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/drawable/favourite_star_transition.xml" value="0.2703125" />
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/drawable/favourite_start_transition.xml" value="0.2703125" />
         <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/drawable/ic_baseline_add_location_24.xml" value="0.2703125" />
+        <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/drawable/ic_baseline_star_outline_24.xml" value="0.2703125" />
         <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
         <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/layout/dashboard_recyclerview_layout.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/WeatherAppRetrofit/app/src/main/res/layout/fragment_daily.xml" value="0.23550724637681159" />

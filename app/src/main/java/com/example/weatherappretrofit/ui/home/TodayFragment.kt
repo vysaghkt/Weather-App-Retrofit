@@ -33,6 +33,7 @@ class TodayFragment : Fragment() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var isChecked: Boolean = false
+    private var isLastEntered: Boolean = false
     private var selectedPosition: Int? = null
 
     // This property is only valid between onCreateView and
@@ -187,14 +188,24 @@ class TodayFragment : Fragment() {
                             getString(R.string.added_to_favourites),
                             Toast.LENGTH_SHORT
                         ).show()
+                        isLastEntered = true
                         isChecked = true
                     } else {
-                        todayViewModel.deleteCity(
-                            City(
-                                cityIdList[selectedPosition!!],
-                                binding.citySearch.text.toString()
+                        if (!isLastEntered) {
+                            todayViewModel.deleteCity(
+                                City(
+                                    cityIdList[selectedPosition!!],
+                                    binding.citySearch.text.toString()
+                                )
                             )
-                        )
+                        } else {
+                            todayViewModel.deleteCity(
+                                City(
+                                    cityIdList.last(),
+                                    binding.citySearch.text.toString()
+                                )
+                            )
+                        }
                         binding.favouriteIcon.setImageResource(R.drawable.ic_baseline_star_outline_24)
                         binding.citySearch.setText("")
                         Toast.makeText(
@@ -219,6 +230,7 @@ class TodayFragment : Fragment() {
                 selectedPosition = position
                 binding.favouriteIcon.setImageResource(R.drawable.favourite_star)
                 isChecked = true
+                isLastEntered = false
             }
     }
 
