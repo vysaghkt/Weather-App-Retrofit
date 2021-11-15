@@ -50,12 +50,8 @@ class DailyFragment : Fragment() {
             LocationServices.getFusedLocationProviderClient(requireContext())
 
         settingsViewModel.getSelectedUnit()
-        settingsViewModel.selectedUnit.observe(viewLifecycleOwner, {
-            val unit = if (it == "Imperial") {
-                getString(R.string.imperial)
-            } else {
-                getString(R.string.metric)
-            }
+        settingsViewModel.selectedUnit.observe(viewLifecycleOwner, { unit ->
+
             todayViewModel.instanceSaved.observe(viewLifecycleOwner, { cityName ->
                 if (isOnline()) {
                     if (cityName != "") {
@@ -92,7 +88,11 @@ class DailyFragment : Fragment() {
             if (it != null) {
                 getForecastWeatherData(it.latitude, it.longitude, unit)
             } else {
-                getForecastWeatherData(0.0, 0.0, unit)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.set_location),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

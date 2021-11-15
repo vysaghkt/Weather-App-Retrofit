@@ -23,6 +23,6 @@ class StoreDataRepository(private val context: Context) {
     }
 
     fun readUnits() = context.dataStore.data.map {
-        it[UNITS] ?: ""
+        it[UNITS] ?: "Metric"
     }
 }

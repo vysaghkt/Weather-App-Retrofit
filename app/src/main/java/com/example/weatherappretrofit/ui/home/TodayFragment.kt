@@ -240,7 +240,11 @@ class TodayFragment : Fragment() {
             if (it != null) {
                 getForecastWeather(it.latitude, it.longitude, unit)
             } else {
-                getForecastWeather(0.0, 0.0, unit)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.set_location),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -266,13 +270,7 @@ class TodayFragment : Fragment() {
 
     private fun getForecastWeather(latitude: Double?, longitude: Double?, unit: String) {
 
-        val unitSelected = if (unit == "Imperial") {
-            getString(R.string.imperial)
-        } else {
-            getString(R.string.metric)
-        }
-
-        val degreeUnit = if (unitSelected == "Metric") {
+        val degreeUnit = if (unit == "Metric") {
             getString(
                 R.string.celsius
             )
@@ -281,7 +279,7 @@ class TodayFragment : Fragment() {
                 R.string.fahrenheit
             )
         }
-        todayViewModel.getForecastData(latitude!!, longitude!!, unitSelected)
+        todayViewModel.getForecastData(latitude!!, longitude!!, unit)
         todayViewModel.forecastData.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful) {
                 val sdf =
