@@ -8,9 +8,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.map
 
-class StoreDataRepository(private val context: Context) {
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("my_preference")
 
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("my_preference")
+class StoreDataRepository(private val context: Context) {
 
     companion object {
         val UNITS = stringPreferencesKey("units")
